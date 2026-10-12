@@ -18,6 +18,7 @@
             </div>
 
             <!-- Form Upload Foto -->
+            @can('upload foto')
             <div class="bg-white p-6 rounded-lg shadow-sm mb-6">
                 <h4 class="font-bold text-md text-gray-700 mb-3">Upload Foto Dokumentasi Lapangan</h4>
                 <form action="{{ route('foto.store', $pk) }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-4">
@@ -28,6 +29,7 @@
                     </button>
                 </form>
             </div>
+            @endcan
 
             <!-- Dokumentasi Pelaksanaan Pekerjaan (Model Si Ujang - Kompak & Proporsional) -->
             <div class="bg-white p-6 rounded-lg shadow-sm">
@@ -63,6 +65,7 @@
                                     </p>
 
                                     <!-- Tombol Hapus Foto -->
+                                    @can('delete foto')
                                     <form action="{{ route('foto.destroy', $foto) }}" method="POST" class="mt-1" onsubmit="return confirm('Hapus foto ini?')">
                                         @csrf
                                         @method('DELETE')
@@ -70,6 +73,7 @@
                                             🗑️ Hapus
                                         </button>
                                     </form>
+                                    @endcan
                                 </div>
                             </div>
                         @endforeach

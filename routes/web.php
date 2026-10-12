@@ -25,26 +25,26 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Route Resource Management User
-    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class)->middleware('can:manage users');
 
-    // Route Resource Master KHS
-    Route::resource('users', UserController::class);
-    Route::resource('khs', KhsController::class);
-    Route::resource('kr', KrController::class)->except(['index', 'show']);
+    // Route Resource Master KHS & KR
+    Route::resource('khs', KhsController::class)->middleware('can:manage khs');
+    Route::resource('kr', KrController::class)->except(['index', 'show'])->middleware('can:manage kr');
 
     // Route Resource Master Tahap Penagihan
-    Route::resource('users', UserController::class);
-    Route::resource('khs', KhsController::class);
-    Route::resource('kr', KrController::class)->except(['index', 'show']);
-    Route::resource('tahap', TahapPenagihanController::class);
-    Route::resource('pk', PkController::class);
+    Route::resource('tahap', TahapPenagihanController::class)->middleware('can:manage tahap');
+    
+    // Route PK/SPK
+    Route::resource('pk', PkController::class)->only(['index', 'show'])->middleware('can:view pk');
+    Route::resource('pk', PkController::class)->only(['create', 'store'])->middleware('can:create pk');
+    Route::resource('pk', PkController::class)->only(['edit', 'update', 'destroy'])->middleware('can:edit pk');
 
     // Route Upload & Hapus Foto
-    Route::post('/pk/{pk}/foto', [FotoDokumentasiController::class, 'store'])->name('foto.store');
-    Route::delete('/foto/{foto}', [FotoDokumentasiController::class, 'destroy'])->name('foto.destroy');
+    Route::post('/pk/{pk}/foto', [FotoDokumentasiController::class, 'store'])->name('foto.store')->middleware('can:upload foto');
+    Route::delete('/foto/{foto}', [FotoDokumentasiController::class, 'destroy'])->name('foto.destroy')->middleware('can:delete foto');
 
     // Route Export ZIP
-    Route::get('/tahap/{tahap}/export', [ExportZipController::class, 'download'])->name('tahap.export');
+    Route::get('/tahap/{tahap}/export', [ExportZipController::class, 'download'])->name('tahap.export')->middleware('can:export zip');
 });
 
 require __DIR__.'/auth.php';

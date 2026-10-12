@@ -2,7 +2,9 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Master PK / SPK (Surat Perintah Kerja)</h2>
+            @can('create pk')
             <a href="{{ route('pk.create') }}" class="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700">+ Tambah PK Baru</a>
+            @endcan
         </div>
     </x-slot>
 
@@ -40,11 +42,13 @@
                                 </td>
                                 <td class="px-6 py-4 text-right text-sm font-medium">
                                     <a href="{{ route('pk.show', $pk) }}" class="text-blue-600 hover:text-blue-900 mr-2">Foto</a>
+                                    @can('edit pk')
                                     <a href="{{ route('pk.edit', $pk) }}" class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
                                     <form action="{{ route('pk.destroy', $pk) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus PK ini?')">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
                                     </form>
+                                    @endcan
                                 </td>
                             </tr>
                         @endforeach

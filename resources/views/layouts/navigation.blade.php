@@ -17,21 +17,29 @@
         {{ __('Dashboard') }}
     </x-nav-link>
 
+    @can('manage users')
     <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
         {{ __('Management User') }}
     </x-nav-link>
+    @endcan
 
+    @can('manage khs')
     <x-nav-link :href="route('khs.index')" :active="request()->routeIs('khs.*')">
     {{ __('Master KHS') }}
     </x-nav-link>
+    @endcan
 
+    @can('manage tahap')
     <x-nav-link :href="route('tahap.index')" :active="request()->routeIs('tahap.*')">
     {{ __('Tahap Penagihan') }}
     </x-nav-link>
+    @endcan
 
+    @can('view pk')
     <x-nav-link :href="route('pk.index')" :active="request()->routeIs('pk.*')">
     {{ __('Daftar PK/SPK') }}
     </x-nav-link>
+    @endcan
 
 </div>
             </div>
