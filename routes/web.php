@@ -28,22 +28,26 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class)->middleware('can:manage users');
 
     // Route Resource Master KHS
-    // View (index, show) memerlukan 'view khs'; Modifikasi memerlukan 'manage khs'
-    Route::resource('khs', KhsController::class)->only(['index', 'show'])->middleware('can:view khs');
+    // Modifikasi (create, store, edit, update, destroy) memerlukan 'manage khs'
+    // View (index, show) memerlukan 'view khs'
+    // PERHATIAN: Route create/store/edit HARUS didaftarkan SEBELUM show agar
+    // URI khs/create tidak tertangkap oleh khs/{kh} (model binding).
     Route::resource('khs', KhsController::class)->only(['create', 'store', 'edit', 'update', 'destroy'])->middleware('can:manage khs');
+    Route::resource('khs', KhsController::class)->only(['index', 'show'])->middleware('can:view khs');
 
     // Route Resource Master KR (tidak punya index/show sendiri; diakses via KHS show)
     Route::resource('kr', KrController::class)->except(['index', 'show'])->middleware('can:manage kr');
 
     // Route Resource Master Tahap Penagihan
-    // View (index, show) memerlukan 'view tahap'; Modifikasi memerlukan 'manage tahap'
-    Route::resource('tahap', TahapPenagihanController::class)->only(['index', 'show'])->middleware('can:view tahap');
+    // Modifikasi memerlukan 'manage tahap'; View memerlukan 'view tahap'
     Route::resource('tahap', TahapPenagihanController::class)->only(['create', 'store', 'edit', 'update', 'destroy'])->middleware('can:manage tahap');
+    Route::resource('tahap', TahapPenagihanController::class)->only(['index', 'show'])->middleware('can:view tahap');
 
     // Route PK/SPK
-    Route::resource('pk', PkController::class)->only(['index', 'show'])->middleware('can:view pk');
+    // create/store -> 'create pk'; edit/update/destroy -> 'edit pk'; index/show -> 'view pk'
     Route::resource('pk', PkController::class)->only(['create', 'store'])->middleware('can:create pk');
     Route::resource('pk', PkController::class)->only(['edit', 'update', 'destroy'])->middleware('can:edit pk');
+    Route::resource('pk', PkController::class)->only(['index', 'show'])->middleware('can:view pk');
 
     // Route Upload & Hapus Foto
     Route::post('/pk/{pk}/foto', [FotoDokumentasiController::class, 'store'])->name('foto.store')->middleware('can:upload foto');
