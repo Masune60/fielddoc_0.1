@@ -2,7 +2,9 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Detail KHS: {{ $kh->nomor_khs }}</h2>
+            @can('manage kr')
             <a href="{{ route('kr.create', ['khs_id' => $kh->id]) }}" class="px-4 py-2 bg-green-600 text-white rounded-md text-sm font-medium hover:bg-green-700">+ Tambah KR (Kontrak Rinci)</a>
+            @endcan
         </div>
     </x-slot>
 
@@ -33,11 +35,15 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ $kr->nomor_kr }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500">{{ $kr->spesifikasi_teknis ?? '-' }}</td>
                                 <td class="px-6 py-4 text-right text-sm font-medium">
+                                    @can('manage kr')
                                     <a href="{{ route('kr.edit', $kr) }}" class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
                                     <form action="{{ route('kr.destroy', $kr) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus KR ini?')">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
                                     </form>
+                                    @else
+                                    <span class="text-gray-400 text-xs">Read-only</span>
+                                    @endcan
                                 </td>
                             </tr>
                         @empty

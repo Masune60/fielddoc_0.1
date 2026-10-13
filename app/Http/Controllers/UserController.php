@@ -29,13 +29,15 @@ class UserController extends Controller
             'role' => 'required|in:ADMIN,SUPERVISOR,WORKER',
         ]);
 
-        User::create([
+        $user = User::create([
             'username' => $request->username,
             'nama_lengkap' => $request->nama_lengkap,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
         ]);
+
+        $user->syncRoles([$this->mapRoleToSpatieRole($request->role)]);
 
         return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan.');
     }
@@ -68,6 +70,8 @@ class UserController extends Controller
 
         $user->update($data);
 
+        $user->syncRoles([$this->mapRoleToSpatieRole($request->role)]);
+
         return redirect()->route('users.index')->with('success', 'User berhasil diperbarui.');
     }
 
@@ -75,5 +79,18 @@ class UserController extends Controller
     {
         $user->delete();
         return redirect()->route('users.index')->with('success', 'User berhasil dihapus.');
+    }
+
+    /**
+     * Map kolom role (ADMIN/SUPERVISOR/WORKER) ke nama role Spatie.
+     */
+    private function mapRoleToSpatieRole(string $role): string
+    {
+        return match ($role) {
+            'ADMIN' => 'Admin Penagihan',
+            'SUPERVISOR' => 'Supervisor',
+            'WORKER' => 'Worker',
+            default => 'Worker',
+        };
     }
 }

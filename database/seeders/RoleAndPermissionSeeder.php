@@ -22,8 +22,10 @@ class RoleAndPermissionSeeder extends Seeder
         // 1. Create Permissions
         $permissions = [
             'manage users',
+            'view khs',
             'manage khs',
             'manage kr',
+            'view tahap',
             'manage tahap',
             'create pk',
             'edit pk',
@@ -39,25 +41,35 @@ class RoleAndPermissionSeeder extends Seeder
 
         // 2. Create Roles and Assign Permissions
         // Role: Admin Penagihan (Architect)
-        // Gets all permissions automatically via Gate::before in AppServiceProvider, 
-        // but we can still create the role here.
+        // Gets all permissions automatically via Gate::before in AppServiceProvider,
+        // but we assign all permissions explicitly for consistency and auditability.
         $adminRole = Role::firstOrCreate(['name' => 'Admin Penagihan']);
+        $adminRole->syncPermissions($permissions);
 
         // Role: Supervisor (Pengawas / Verifikator)
+        // - Tidak bisa memodifikasi KHS (hanya view)
+        // - Hak penuh modifikasi modul KR dan PK (termasuk foto)
+        // - Bisa view Tahap & export ZIP
         $supervisorRole = Role::firstOrCreate(['name' => 'Supervisor']);
-        $supervisorRole->givePermissionTo([
+        $supervisorRole->syncPermissions([
+            'view khs',
+            'manage kr',
+            'view tahap',
             'create pk',
             'edit pk',
             'view pk',
-            'export zip'
+            'upload foto',
+            'delete foto',
+            'export zip',
         ]);
 
         // Role: Worker (Petugas Lapangan / Vendor)
+        // - Hanya bisa melihat daftar PK dan mengunggah foto
+        // - Tidak bisa menghapus foto maupun memodifikasi data apapun
         $workerRole = Role::firstOrCreate(['name' => 'Worker']);
-        $workerRole->givePermissionTo([
+        $workerRole->syncPermissions([
             'view pk',
             'upload foto',
-            'delete foto'
         ]);
 
         // 3. Create Sample Users and Assign Roles

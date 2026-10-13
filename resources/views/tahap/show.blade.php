@@ -5,12 +5,16 @@
             Detail Tahap: {{ $tahap->nomor_tahap }}
         </h2>
         <div class="flex gap-2">
+            @can('export zip')
             <a href="{{ route('tahap.export', $tahap) }}" class="px-4 py-2 bg-purple-600 text-white rounded-md text-sm font-medium hover:bg-purple-700">
                 📦 Export Paket ZIP Berstruktur
             </a>
+            @endcan
+            @can('create pk')
             <a href="{{ route('pk.create', ['tahap_id' => $tahap->id]) }}" class="px-4 py-2 bg-green-600 text-white rounded-md text-sm font-medium hover:bg-green-700">
                 + Tambah PK / SPK Pekerjaan
             </a>
+            @endcan
         </div>
     </div>
 </x-slot>
@@ -48,7 +52,9 @@
                                 </td>
                                 <td class="px-6 py-4 text-right text-sm font-medium">
                                     <a href="{{ route('pk.show', $pk) }}" class="text-blue-600 hover:text-blue-900 mr-2">Lihat Foto</a>
+                                    @can('edit pk')
                                     <a href="{{ route('pk.edit', $pk) }}" class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
+                                    @endcan
                                 </td>
                             </tr>
                         @empty

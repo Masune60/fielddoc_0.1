@@ -27,13 +27,19 @@ Route::middleware('auth')->group(function () {
     // Route Resource Management User
     Route::resource('users', UserController::class)->middleware('can:manage users');
 
-    // Route Resource Master KHS & KR
-    Route::resource('khs', KhsController::class)->middleware('can:manage khs');
+    // Route Resource Master KHS
+    // View (index, show) memerlukan 'view khs'; Modifikasi memerlukan 'manage khs'
+    Route::resource('khs', KhsController::class)->only(['index', 'show'])->middleware('can:view khs');
+    Route::resource('khs', KhsController::class)->only(['create', 'store', 'edit', 'update', 'destroy'])->middleware('can:manage khs');
+
+    // Route Resource Master KR (tidak punya index/show sendiri; diakses via KHS show)
     Route::resource('kr', KrController::class)->except(['index', 'show'])->middleware('can:manage kr');
 
     // Route Resource Master Tahap Penagihan
-    Route::resource('tahap', TahapPenagihanController::class)->middleware('can:manage tahap');
-    
+    // View (index, show) memerlukan 'view tahap'; Modifikasi memerlukan 'manage tahap'
+    Route::resource('tahap', TahapPenagihanController::class)->only(['index', 'show'])->middleware('can:view tahap');
+    Route::resource('tahap', TahapPenagihanController::class)->only(['create', 'store', 'edit', 'update', 'destroy'])->middleware('can:manage tahap');
+
     // Route PK/SPK
     Route::resource('pk', PkController::class)->only(['index', 'show'])->middleware('can:view pk');
     Route::resource('pk', PkController::class)->only(['create', 'store'])->middleware('can:create pk');
