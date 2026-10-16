@@ -44,12 +44,14 @@ Sistem manajemen dokumentasi foto lapangan vendor PLN menggunakan kontrol akses 
 
 ### 3. Worker (Petugas Lapangan / Vendor)
 
-- **Akses Halaman:** Dashboard dan daftar PK/SPK; detail PK, profil, dan fitur sistem lainnya tidak dapat diakses.
-- **Fitur Khusus:** Hanya mengunggah foto dari halaman daftar PK.
-- **Pembatasan Wajib:** DILARANG akses `manage users`, `manage profile`, `manage khs`, `manage kr`, `manage tahap`, `export zip`, detail PK, dan penghapusan foto.
+- **Akses Halaman:** Dashboard, daftar PK/SPK, dan detail PK hanya-baca untuk meninjau dokumentasi.
+- **Fitur Khusus:** Mengunggah foto dari daftar atau detail PK, melihat pratinjau/foto ukuran penuh, dan menghapus foto yang diunggah sendiri.
+- **Pembatasan Wajib:** DILARANG akses `manage users`, `manage profile`, `manage khs`, `manage kr`, `manage tahap`, `export zip`, perubahan data PK, dan penghapusan foto milik pengguna lain.
 - **Permission yang Dimiliki:**
     - `view pk`
+    - `view pk details` (hanya-baca untuk pratinjau foto)
     - `upload foto`
+    - `delete foto` (hanya foto yang diunggah sendiri)
 
 ## Lapisan Keamanan
 

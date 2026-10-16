@@ -49,8 +49,8 @@
                                     
                                     <!-- Pratinjau Gambar Proporsional -->
                                     <div class="p-1.5">
-                                        <a href="{{ asset('storage/' . $foto->file_path_url) }}" target="_blank">
-                                            <img src="{{ asset('storage/' . $foto->file_path_url) }}" alt="Foto {{ $index + 1 }}" class="w-full h-28 object-cover rounded border hover:opacity-90 transition">
+                                        <a href="{{ route('foto.view', $foto) }}" target="_blank" rel="noopener noreferrer">
+                                            <img src="{{ route('foto.view', $foto) }}" alt="Foto {{ $index + 1 }}" class="w-full h-28 object-cover rounded border hover:opacity-90 transition">
                                         </a>
                                     </div>
                                 </div>
@@ -66,13 +66,15 @@
 
                                     <!-- Tombol Hapus Foto -->
                                     @can('delete foto')
-                                    <form action="{{ route('foto.destroy', $foto) }}" method="POST" class="mt-1" onsubmit="return confirm('Hapus foto ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="w-full py-0.5 bg-red-50 text-red-600 font-semibold rounded hover:bg-red-100 text-center transition text-[11px]">
-                                            🗑️ Hapus
-                                        </button>
-                                    </form>
+                                        @if (auth()->user()->hasAnyRole(['Admin Penagihan', 'Supervisor']) || $foto->uploader_id === auth()->id())
+                                            <form action="{{ route('foto.destroy', $foto) }}" method="POST" class="mt-1" onsubmit="return confirm('Hapus foto ini?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="w-full py-0.5 bg-red-50 text-red-600 font-semibold rounded hover:bg-red-100 text-center transition text-[11px]">
+                                                    🗑️ Hapus
+                                                </button>
+                                            </form>
+                                        @endif
                                     @endcan
                                 </div>
                             </div>

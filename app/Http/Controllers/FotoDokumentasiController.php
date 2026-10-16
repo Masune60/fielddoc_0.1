@@ -10,6 +10,20 @@ use Illuminate\Support\Facades\Storage;
 
 class FotoDokumentasiController extends Controller
 {
+    public function show(FotoDokumentasi $foto)
+    {
+        if (!Storage::disk('public')->exists($foto->file_path_url)) {
+            abort(404);
+        }
+
+        return Storage::disk('public')->response(
+            $foto->file_path_url,
+            basename($foto->file_path_url),
+            [],
+            'inline'
+        );
+    }
+
     public function store(Request $request, Pk $pk)
     {
         $request->validate([
@@ -42,8 +56,15 @@ class FotoDokumentasiController extends Controller
         return redirect()->back()->with('success', $msg);
     }
 
-    public function destroy(FotoDokumentasi $foto)
+    public function destroy(Request $request, FotoDokumentasi $foto)
     {
+        if (
+            $foto->uploader_id !== $request->user()->id
+            && ! $request->user()->hasAnyRole(['Admin Penagihan', 'Supervisor'])
+        ) {
+            abort(403);
+        }
+
         if (Storage::disk('public')->exists($foto->file_path_url)) {
             Storage::disk('public')->delete($foto->file_path_url);
         }

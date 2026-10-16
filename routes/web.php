@@ -16,7 +16,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware('auth')->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     // Route Profile bawaan Breeze
@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
 
     // Route Upload & Hapus Foto
     Route::post('/pk/{pk}/foto', [FotoDokumentasiController::class, 'store'])->name('foto.store')->middleware('can:upload foto');
+    Route::get('/foto/{foto}/view', [FotoDokumentasiController::class, 'show'])->name('foto.view')->middleware('can:view pk details');
     Route::delete('/foto/{foto}', [FotoDokumentasiController::class, 'destroy'])->name('foto.destroy')->middleware('can:delete foto');
 
     // Route Export ZIP

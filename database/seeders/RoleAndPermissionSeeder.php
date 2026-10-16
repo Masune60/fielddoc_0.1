@@ -67,12 +67,14 @@ class RoleAndPermissionSeeder extends Seeder
         ]);
 
         // Role: Worker (Petugas Lapangan / Vendor)
-        // - Hanya bisa melihat daftar PK dan mengunggah foto
-        // - Tidak bisa menghapus foto maupun memodifikasi data apapun
+        // - Hanya bisa melihat daftar/detail PK dan mengunggah foto untuk verifikasi
+        // - Dapat menghapus unggahan sendiri; tidak dapat memodifikasi data PK
         $workerRole = Role::firstOrCreate(['name' => 'Worker']);
         $workerRole->syncPermissions([
             'view pk',
+            'view pk details',
             'upload foto',
+            'delete foto',
         ]);
 
         // 3. Create Sample Users and Assign Roles

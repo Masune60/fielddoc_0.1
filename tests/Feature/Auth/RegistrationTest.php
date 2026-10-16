@@ -31,6 +31,7 @@ class RegistrationTest extends TestCase
 
         $this->assertAuthenticated();
         $response->assertRedirect(route('dashboard', absolute: false));
+        $this->get(route('dashboard'))->assertOk();
 
         $user = User::where('email', 'test@example.com')->firstOrFail();
         $this->assertSame('Test User', $user->nama_lengkap);

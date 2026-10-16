@@ -86,6 +86,9 @@ class RoleAccessControlTest extends TestCase
             ->get(route('users.index'))
             ->assertOk();
 
+        Storage::fake('public');
+        Storage::disk('public')->put($this->foto->file_path_url, 'image content');
+
         foreach ([
             'manage users', 'manage profile', 'view khs', 'manage khs', 'manage kr',
             'view tahap', 'manage tahap', 'create pk', 'edit pk', 'view pk',
@@ -93,6 +96,11 @@ class RoleAccessControlTest extends TestCase
         ] as $permission) {
             $this->assertTrue($this->admin->can($permission), "Admin lacks {$permission}.");
         }
+
+        $this->get(route('pk.show', $this->pk))
+            ->assertOk()
+            ->assertSee('Upload Foto Dokumentasi Lapangan')
+            ->assertSee('href="'.route('foto.view', $this->foto).'"', false);
 
         foreach ([
             route('profile.edit'),
@@ -110,6 +118,10 @@ class RoleAccessControlTest extends TestCase
         ] as $url) {
             $this->get($url)->assertOk();
         }
+
+        $this->get(route('foto.view', $this->foto))
+            ->assertOk()
+            ->assertHeader('Content-Disposition', 'inline; filename=existing.jpg');
 
         $this->post(route('khs.store'), [])->assertSessionHasErrors();
         $this->put(route('khs.update', $this->khs), [])->assertSessionHasErrors();
@@ -191,7 +203,7 @@ class RoleAccessControlTest extends TestCase
         $this->delete(route('users.destroy', $this->worker))->assertForbidden();
     }
 
-    public function test_worker_can_only_upload_photos_from_pk_list_and_cannot_modify_other_features(): void
+    public function test_worker_can_upload_and_review_photos_without_modifying_other_features(): void
     {
         Storage::fake('public');
         $this->actingAs($this->worker);
@@ -199,17 +211,54 @@ class RoleAccessControlTest extends TestCase
         $this->get(route('pk.index'))
             ->assertOk()
             ->assertSee('Unggah Foto')
-            ->assertDontSee('href="' . route('pk.show', $this->pk) . '"', false);
+            ->assertSee('href="' . route('pk.show', $this->pk) . '"', false);
 
         $upload = UploadedFile::fake()->createWithContent(
             'lapangan.png',
             base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p2sAAAAASUVORK5CYII=')
         );
         $this->post(route('foto.store', $this->pk), ['foto' => $upload])->assertRedirect();
+        $uploadedFoto = FotoDokumentasi::where('uploader_id', $this->worker->id)->latest('id')->firstOrFail();
         $this->assertDatabaseHas('foto_dokumentasis', [
             'pk_id' => $this->pk->id,
             'uploader_id' => $this->worker->id,
         ]);
+
+        $this->get(route('pk.show', $this->pk))
+            ->assertOk()
+            ->assertSee('href="'.route('foto.view', $uploadedFoto).'"', false);
+
+        $secondUpload = UploadedFile::fake()->createWithContent(
+            'lapangan-2.png',
+            base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p2sAAAAASUVORK5CYII=')
+        );
+        $this->from(route('pk.show', $this->pk))
+            ->post(route('foto.store', $this->pk), ['foto' => $secondUpload])
+            ->assertRedirect(route('pk.show', $this->pk));
+
+        $secondFoto = FotoDokumentasi::where('uploader_id', $this->worker->id)->latest('id')->firstOrFail();
+        $this->get(route('foto.view', $secondFoto))->assertOk();
+        $this->get(route('pk.show', $this->pk))
+            ->assertOk()
+            ->assertSee('href="'.route('foto.view', $secondFoto).'"', false)
+            ->assertDontSee(route('pk.edit', $this->pk), false)
+            ->assertSee('action="'.route('foto.destroy', $secondFoto).'"', false);
+
+        $otherWorker = User::factory()->create();
+        $otherFoto = FotoDokumentasi::create([
+            'pk_id' => $this->pk->id,
+            'uploader_id' => $otherWorker->id,
+            'file_path_url' => 'foto_dokumentasi/other-worker.png',
+            'status_verifikasi' => 'PENDING',
+        ]);
+
+        $this->get(route('pk.show', $this->pk))
+            ->assertOk()
+            ->assertDontSee('action="'.route('foto.destroy', $otherFoto).'"', false);
+        $this->delete(route('foto.destroy', $otherFoto))->assertForbidden();
+        $this->assertDatabaseHas('foto_dokumentasis', ['id' => $otherFoto->id]);
+        $this->delete(route('foto.destroy', $secondFoto))->assertRedirect();
+        $this->assertDatabaseMissing('foto_dokumentasis', ['id' => $secondFoto->id]);
 
         foreach ([
             route('users.index'),
@@ -223,7 +272,6 @@ class RoleAccessControlTest extends TestCase
             route('tahap.create'),
             route('tahap.show', $this->tahap),
             route('tahap.edit', $this->tahap),
-            route('pk.show', $this->pk),
             route('pk.create'),
             route('pk.edit', $this->pk),
         ] as $url) {
@@ -248,7 +296,7 @@ class RoleAccessControlTest extends TestCase
         $this->patch(route('profile.update'), [])->assertForbidden();
         $this->delete(route('profile.destroy'), [])->assertForbidden();
         $this->put(route('password.update'), [])->assertForbidden();
-        $this->delete(route('foto.destroy', $this->foto))->assertForbidden();
+        $this->delete(route('foto.destroy', $this->foto))->assertRedirect();
         $this->get(route('tahap.export', $this->tahap))->assertForbidden();
     }
 }
