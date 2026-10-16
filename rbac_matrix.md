@@ -7,12 +7,14 @@ Sistem manajemen dokumentasi foto lapangan vendor PLN menggunakan kontrol akses 
 | Permission     | Deskripsi                                               |
 | -------------- | ------------------------------------------------------- |
 | `manage users` | Akses CRUD penuh pada Manajemen User dan Role           |
+| `manage profile` | Mengelola profil, akun sendiri, dan kata sandi         |
 | `manage khs`   | Akses CRUD penuh pada Master KHS                        |
 | `manage kr`    | Akses CRUD penuh pada Master Kontrak Rinci (KR)         |
 | `manage tahap` | Membuat, mengedit, dan mengunci status Tahap Penagihan  |
 | `create pk`    | Membuat data PK/SPK                                     |
 | `edit pk`      | Mengedit data PK/SPK                                    |
 | `view pk`      | Melihat data PK/SPK                                     |
+| `view pk details` | Melihat detail dan foto PK/SPK                       |
 | `upload foto`  | Mengunggah foto dokumentasi lapangan dengan geotag/EXIF |
 | `delete foto`  | Menghapus foto sebelum dikunci                          |
 | `export zip`   | Mengunduh paket berkas dokumentasi dalam format .ZIP    |
@@ -22,31 +24,32 @@ Sistem manajemen dokumentasi foto lapangan vendor PLN menggunakan kontrol akses 
 ### 1. Admin Penagihan (Admin / Architect)
 
 - **Akses Halaman:** Dashboard, Management User, Master KHS, Kontrak Rinci, Tahap Penagihan, Daftar PK/SPK, Export.
-- **Hak Akses:** Penuh (Otomatis melalui `Gate::before`).
+- **Hak Akses:** Penuh untuk semua fitur (Otomatis melalui `Gate::before`).
 - **Permission Terkait (Secara Fungsional):** Semua permission.
 
 ### 2. Supervisor (Pengawas / Verifikator)
 
-- **Akses Halaman:** Dashboard, Master KHS/KR (Read-Only), Tahap Penagihan, Daftar PK/SPK, Export.
+- **Akses Halaman:** Dashboard, Master KHS (Read-Only), KR, Tahap Penagihan (Read-Only), Daftar/detail PK/SPK, Export.
 - **Fitur Khusus:** Verifikasi/approval berkas penagihan.
 - **Pembatasan Wajib:** DILARANG akses `manage users`, DILARANG mengubah/menghapus `manage khs`.
 - **Permission yang Dimiliki:**
-    - `manage kr` (Hanya view)
+    - `manage kr` (CRUD penuh)
+    - `manage profile`
     - `manage tahap` (Hanya view / approve)
     - `create pk`
     - `edit pk`
     - `view pk`
+    - `view pk details`
     - `export zip`
 
 ### 3. Worker (Petugas Lapangan / Vendor)
 
-- **Akses Halaman:** Dashboard, Daftar PK/SPK (hanya PK milik worker).
-- **Fitur Khusus:** Unggah foto dan hapus foto sebelum dikunci.
-- **Pembatasan Wajib:** DILARANG akses `manage users`, `manage khs`, `manage kr`, `manage tahap`, `export zip`.
+- **Akses Halaman:** Dashboard dan daftar PK/SPK; detail PK, profil, dan fitur sistem lainnya tidak dapat diakses.
+- **Fitur Khusus:** Hanya mengunggah foto dari halaman daftar PK.
+- **Pembatasan Wajib:** DILARANG akses `manage users`, `manage profile`, `manage khs`, `manage kr`, `manage tahap`, `export zip`, detail PK, dan penghapusan foto.
 - **Permission yang Dimiliki:**
     - `view pk`
     - `upload foto`
-    - `delete foto`
 
 ## Lapisan Keamanan
 

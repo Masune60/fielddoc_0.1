@@ -22,6 +22,7 @@ class RoleAndPermissionSeeder extends Seeder
         // 1. Create Permissions
         $permissions = [
             'manage users',
+            'manage profile',
             'view khs',
             'manage khs',
             'manage kr',
@@ -30,6 +31,7 @@ class RoleAndPermissionSeeder extends Seeder
             'create pk',
             'edit pk',
             'view pk',
+            'view pk details',
             'upload foto',
             'delete foto',
             'export zip',
@@ -54,10 +56,12 @@ class RoleAndPermissionSeeder extends Seeder
         $supervisorRole->syncPermissions([
             'view khs',
             'manage kr',
+            'manage profile',
             'view tahap',
             'create pk',
             'edit pk',
             'view pk',
+            'view pk details',
             'upload foto',
             'delete foto',
             'export zip',
@@ -81,7 +85,7 @@ class RoleAndPermissionSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'ADMIN'
         ]);
-        $adminUser->assignRole($adminRole);
+        $adminUser->syncRoles($adminRole);
 
         $supervisorUser = User::firstOrCreate([
             'email' => 'supervisor@fielddoc.test'
@@ -91,7 +95,7 @@ class RoleAndPermissionSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'SUPERVISOR'
         ]);
-        $supervisorUser->assignRole($supervisorRole);
+        $supervisorUser->syncRoles($supervisorRole);
 
         $workerUser = User::firstOrCreate([
             'email' => 'worker@fielddoc.test'
@@ -101,6 +105,6 @@ class RoleAndPermissionSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'WORKER'
         ]);
-        $workerUser->assignRole($workerRole);
+        $workerUser->syncRoles($workerRole);
     }
 }

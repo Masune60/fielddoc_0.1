@@ -20,9 +20,9 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     // Route Profile bawaan Breeze
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit')->middleware('can:manage profile');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('can:manage profile');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy')->middleware('can:manage profile');
 
     // Route Resource Management User
     Route::resource('users', UserController::class)->middleware('can:manage users');
@@ -47,7 +47,8 @@ Route::middleware('auth')->group(function () {
     // create/store -> 'create pk'; edit/update/destroy -> 'edit pk'; index/show -> 'view pk'
     Route::resource('pk', PkController::class)->only(['create', 'store'])->middleware('can:create pk');
     Route::resource('pk', PkController::class)->only(['edit', 'update', 'destroy'])->middleware('can:edit pk');
-    Route::resource('pk', PkController::class)->only(['index', 'show'])->middleware('can:view pk');
+    Route::resource('pk', PkController::class)->only(['index'])->middleware('can:view pk');
+    Route::resource('pk', PkController::class)->only(['show'])->middleware('can:view pk details');
 
     // Route Upload & Hapus Foto
     Route::post('/pk/{pk}/foto', [FotoDokumentasiController::class, 'store'])->name('foto.store')->middleware('can:upload foto');

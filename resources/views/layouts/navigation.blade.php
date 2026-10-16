@@ -61,6 +61,12 @@
 
                     <x-slot name="content">
 
+                        @can('manage profile')
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
+                        @endcan
+
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -93,6 +99,30 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            @can('manage users')
+                <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                    {{ __('Management User') }}
+                </x-responsive-nav-link>
+            @endcan
+
+            @can('view khs')
+                <x-responsive-nav-link :href="route('khs.index')" :active="request()->routeIs('khs.*')">
+                    {{ __('Master KHS') }}
+                </x-responsive-nav-link>
+            @endcan
+
+            @can('view tahap')
+                <x-responsive-nav-link :href="route('tahap.index')" :active="request()->routeIs('tahap.*')">
+                    {{ __('Tahap Penagihan') }}
+                </x-responsive-nav-link>
+            @endcan
+
+            @can('view pk')
+                <x-responsive-nav-link :href="route('pk.index')" :active="request()->routeIs('pk.*')">
+                    {{ __('Daftar PK/SPK') }}
+                </x-responsive-nav-link>
+            @endcan
         </div>
 
         <!-- Responsive Settings Options -->
@@ -103,9 +133,11 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
+                @can('manage profile')
+                    <x-responsive-nav-link :href="route('profile.edit')">
+                        {{ __('Profile') }}
+                    </x-responsive-nav-link>
+                @endcan
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">

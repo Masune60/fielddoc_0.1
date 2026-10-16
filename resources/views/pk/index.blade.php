@@ -30,7 +30,11 @@
                         @foreach ($pks as $pk)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-indigo-600">
+                                    @can('view pk details')
                                     <a href="{{ route('pk.show', $pk) }}">{{ $pk->nomor_pk }}</a>
+                                    @else
+                                    {{ $pk->nomor_pk }}
+                                    @endcan
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-500">{{ $pk->tahapPenagihan->nomor_tahap ?? 'Unassigned' }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-900">{{ $pk->nama_pekerjaan }}</td>
@@ -41,12 +45,21 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-right text-sm font-medium">
+                                    @can('view pk details')
                                     <a href="{{ route('pk.show', $pk) }}" class="text-blue-600 hover:text-blue-900 mr-2">Foto</a>
+                                    @endcan
                                     @can('edit pk')
                                     <a href="{{ route('pk.edit', $pk) }}" class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
                                     <form action="{{ route('pk.destroy', $pk) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus PK ini?')">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
+                                    </form>
+                                    @endcan
+                                    @can('upload foto')
+                                    <form action="{{ route('foto.store', $pk) }}" method="POST" enctype="multipart/form-data" class="mt-2 flex flex-col items-end gap-1">
+                                        @csrf
+                                        <input type="file" name="foto" accept="image/jpeg,image/jpg,image/png" required class="block w-full text-xs text-gray-500">
+                                        <button type="submit" class="px-3 py-1 bg-indigo-600 text-white rounded text-xs font-medium hover:bg-indigo-700">Unggah Foto</button>
                                     </form>
                                     @endcan
                                 </td>
