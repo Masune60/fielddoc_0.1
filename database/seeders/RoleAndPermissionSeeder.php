@@ -7,7 +7,6 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 
 class RoleAndPermissionSeeder extends Seeder
 {
@@ -78,33 +77,33 @@ class RoleAndPermissionSeeder extends Seeder
 
         // 3. Create Sample Users and Assign Roles
         $adminUser = User::firstOrCreate([
-            'email' => 'admin@fielddoc.test'
+            'email' => 'admin@diancahayaprima.com'
         ], [
-            'username' => 'admin',
-            'nama_lengkap' => 'Sample Admin',
-            'password' => Hash::make('password'),
+            'username' => 'admin_dcp',
+            'nama_lengkap' => 'Admin Penagihan',
+            'password' => 'password123',
             'role' => 'ADMIN'
         ]);
-        $adminUser->syncRoles($adminRole);
+        $adminUser->syncRoles(['Admin Penagihan']);
 
         $supervisorUser = User::firstOrCreate([
-            'email' => 'supervisor@fielddoc.test'
+            'email' => 'spv@diancahayaprima.com'
         ], [
-            'username' => 'supervisor',
-            'nama_lengkap' => 'Sample Supervisor',
-            'password' => Hash::make('password'),
+            'username' => 'spv_dcp',
+            'nama_lengkap' => 'Supervisor Lapangan',
+            'password' => 'password123',
             'role' => 'SUPERVISOR'
         ]);
-        $supervisorUser->syncRoles($supervisorRole);
+        $supervisorUser->syncRoles(['Supervisor']);
 
         $workerUser = User::firstOrCreate([
-            'email' => 'worker@fielddoc.test'
+            'email' => 'worker@diancahayaprima.com'
         ], [
-            'username' => 'worker',
-            'nama_lengkap' => 'Sample Worker',
-            'password' => Hash::make('password'),
+            'username' => 'worker_dcp',
+            'nama_lengkap' => 'Worker Lapangan',
+            'password' => 'password123',
             'role' => 'WORKER'
         ]);
-        $workerUser->syncRoles($workerRole);
+        $workerUser->syncRoles(['Worker']);
     }
 }

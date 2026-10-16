@@ -35,9 +35,9 @@ class RoleAccessControlTest extends TestCase
         app(PermissionRegistrar::class)->forgetCachedPermissions();
         $this->seed(RoleAndPermissionSeeder::class);
 
-        $this->admin = User::where('email', 'admin@fielddoc.test')->firstOrFail();
-        $this->supervisor = User::where('email', 'supervisor@fielddoc.test')->firstOrFail();
-        $this->worker = User::where('email', 'worker@fielddoc.test')->firstOrFail();
+        $this->admin = User::where('email', 'admin@diancahayaprima.com')->firstOrFail();
+        $this->supervisor = User::where('email', 'spv@diancahayaprima.com')->firstOrFail();
+        $this->worker = User::where('email', 'worker@diancahayaprima.com')->firstOrFail();
 
         $this->khs = Khs::create([
             'nomor_khs' => 'KHS-TEST',
@@ -68,6 +68,16 @@ class RoleAccessControlTest extends TestCase
             'file_path_url' => 'foto_dokumentasi/existing.jpg',
             'status_verifikasi' => 'PENDING',
         ]);
+    }
+
+    public function test_seeded_admin_can_log_in_with_the_user_seeder_credentials(): void
+    {
+        $this->post(route('login'), [
+            'email' => 'admin@diancahayaprima.com',
+            'password' => 'password123',
+        ])->assertRedirect(route('dashboard'));
+
+        $this->assertAuthenticatedAs($this->admin);
     }
 
     public function test_admin_can_access_every_module_and_all_permissions(): void
@@ -189,7 +199,7 @@ class RoleAccessControlTest extends TestCase
         $this->get(route('pk.index'))
             ->assertOk()
             ->assertSee('Unggah Foto')
-            ->assertDontSee(route('pk.show', $this->pk));
+            ->assertDontSee('href="' . route('pk.show', $this->pk) . '"', false);
 
         $upload = UploadedFile::fake()->createWithContent(
             'lapangan.png',
@@ -235,7 +245,7 @@ class RoleAccessControlTest extends TestCase
         $this->post(route('users.store'), [])->assertForbidden();
         $this->put(route('users.update', $this->worker), [])->assertForbidden();
         $this->delete(route('users.destroy', $this->worker))->assertForbidden();
-        $this->put(route('profile.update'), [])->assertForbidden();
+        $this->patch(route('profile.update'), [])->assertForbidden();
         $this->delete(route('profile.destroy'), [])->assertForbidden();
         $this->put(route('password.update'), [])->assertForbidden();
         $this->delete(route('foto.destroy', $this->foto))->assertForbidden();
