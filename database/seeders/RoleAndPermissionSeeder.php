@@ -6,7 +6,6 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use App\Models\User;
 
 class RoleAndPermissionSeeder extends Seeder
 {
@@ -77,35 +76,5 @@ class RoleAndPermissionSeeder extends Seeder
             'delete foto',
         ]);
 
-        // 3. Create Sample Users and Assign Roles
-        $adminUser = User::firstOrCreate([
-            'email' => 'admin@diancahayaprima.com'
-        ], [
-            'username' => 'admin_dcp',
-            'nama_lengkap' => 'Admin Penagihan',
-            'password' => 'password123',
-            'role' => 'ADMIN'
-        ]);
-        $adminUser->syncRoles(['Admin Penagihan']);
-
-        $supervisorUser = User::firstOrCreate([
-            'email' => 'spv@diancahayaprima.com'
-        ], [
-            'username' => 'spv_dcp',
-            'nama_lengkap' => 'Supervisor Lapangan',
-            'password' => 'password123',
-            'role' => 'SUPERVISOR'
-        ]);
-        $supervisorUser->syncRoles(['Supervisor']);
-
-        $workerUser = User::firstOrCreate([
-            'email' => 'worker@diancahayaprima.com'
-        ], [
-            'username' => 'worker_dcp',
-            'nama_lengkap' => 'Worker Lapangan',
-            'password' => 'password123',
-            'role' => 'WORKER'
-        ]);
-        $workerUser->syncRoles(['Worker']);
     }
 }

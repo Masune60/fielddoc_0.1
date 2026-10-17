@@ -10,7 +10,7 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::firstOrCreate(
+        $admin = User::updateOrCreate(
             ['email' => 'admin@diancahayaprima.com'],
             [
                 'username' => 'admin_dcp',
@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
         );
         $admin->syncRoles(['Admin Penagihan']);
 
-        $supervisor = User::firstOrCreate(
+        $supervisor = User::updateOrCreate(
             ['email' => 'spv@diancahayaprima.com'],
             [
                 'username' => 'spv_dcp',
@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
         );
         $supervisor->syncRoles(['Supervisor']);
 
-        $worker = User::firstOrCreate(
+        $worker = User::updateOrCreate(
             ['email' => 'worker@diancahayaprima.com'],
             [
                 'username' => 'worker_dcp',

@@ -9,6 +9,7 @@ use App\Models\Pk;
 use App\Models\TahapPenagihan;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
+use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -34,6 +35,7 @@ class RoleAccessControlTest extends TestCase
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
         $this->seed(RoleAndPermissionSeeder::class);
+        $this->seed(UserSeeder::class);
 
         $this->admin = User::where('email', 'admin@diancahayaprima.com')->firstOrFail();
         $this->supervisor = User::where('email', 'spv@diancahayaprima.com')->firstOrFail();

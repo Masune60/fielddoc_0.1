@@ -9,6 +9,7 @@ use App\Models\Pk;
 use App\Models\TahapPenagihan;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
+use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
@@ -26,6 +27,7 @@ class DashboardTest extends TestCase
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
         $this->seed(RoleAndPermissionSeeder::class);
+        $this->seed(UserSeeder::class);
 
         $this->admin = User::where('email', 'admin@diancahayaprima.com')->firstOrFail();
         $this->worker = User::where('email', 'worker@diancahayaprima.com')->firstOrFail();
