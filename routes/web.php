@@ -9,14 +9,13 @@ use App\Http\Controllers\PkController;
 use App\Http\Controllers\TahapPenagihanController;
 use App\Http\Controllers\ExportZipController;
 use App\Http\Controllers\FotoDokumentasiController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth')->name('dashboard');
+Route::get('/dashboard', DashboardController::class)->middleware('auth')->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     // Route Profile bawaan Breeze
