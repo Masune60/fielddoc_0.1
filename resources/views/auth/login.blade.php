@@ -1,4 +1,10 @@
 <x-guest-layout>
+    <div class="auth-heading">
+        <span class="auth-eyebrow">FIELD OPERATIONS PLATFORM</span>
+        <h1>Selamat datang kembali</h1>
+        <p>Masuk untuk melanjutkan pengelolaan dokumentasi pekerjaan.</p>
+    </div>
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 

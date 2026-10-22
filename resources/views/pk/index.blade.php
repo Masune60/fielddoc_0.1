@@ -14,8 +14,16 @@
                 <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">{{ session('success') }}</div>
             @endif
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <table class="min-w-full divide-y divide-gray-200">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 data-table-card">
+                <div class="data-table-toolbar">
+                    <span class="data-table-caption">Daftar pekerjaan yang tercatat dalam sistem.</span>
+                    <label class="data-table-search">
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.7"/><path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                        <input type="search" data-table-search="#pk-table" aria-label="Cari pada halaman ini" placeholder="Cari pada halaman ini">
+                    </label>
+                </div>
+                <div class="data-table-scroll">
+                <table id="pk-table" class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nomor PK</th>
@@ -27,7 +35,7 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach ($pks as $pk)
+                        @forelse ($pks as $pk)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-indigo-600">
                                     @can('view pk details')
@@ -40,8 +48,8 @@
                                 <td class="px-6 py-4 text-sm text-gray-900">{{ $pk->nama_pekerjaan }}</td>
                                 <td class="px-6 py-4 text-sm font-semibold text-gray-900">Rp {{ number_format($pk->nilai_pekerjaan, 0, ',', '.') }}</td>
                                 <td class="px-6 py-4 text-sm">
-                                    <span class="px-2 py-1 text-xs rounded-full {{ $pk->status_konstruksi === 'SELESAI_100' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                        {{ $pk->status_konstruksi }}
+                                    <span class="status-pill {{ $pk->status_konstruksi === 'SELESAI_100' ? 'status-pill-success' : 'status-pill-info' }}">
+                                        {{ $pk->status_konstruksi === 'SELESAI_100' ? 'Selesai 100%' : 'Dalam proses' }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-right text-sm font-medium">
@@ -64,10 +72,17 @@
                                     @endcan
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr data-empty-state><td colspan="6" class="data-table-empty">Belum ada data PK / SPK.</td></tr>
+                        @endforelse
+                        <tr data-search-empty hidden><td colspan="6" class="data-table-empty">Tidak ada data yang cocok pada halaman ini.</td></tr>
                     </tbody>
                 </table>
-                <div class="mt-4">{{ $pks->links() }}</div>
+                </div>
+                <div class="data-table-pagination">
+                    <span>Menampilkan {{ $pks->firstItem() ?? 0 }} sampai {{ $pks->lastItem() ?? 0 }} dari {{ $pks->total() }} hasil</span>
+                    {{ $pks->links() }}
+                </div>
             </div>
         </div>
     </div>

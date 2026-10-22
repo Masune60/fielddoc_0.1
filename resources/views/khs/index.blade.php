@@ -14,8 +14,16 @@
                 <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">{{ session('success') }}</div>
             @endif
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <table class="min-w-full divide-y divide-gray-200">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 data-table-card">
+                <div class="data-table-toolbar">
+                    <span class="data-table-caption">Daftar kontrak harga satuan.</span>
+                    <label class="data-table-search">
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.7"/><path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                        <input type="search" data-table-search="#khs-table" aria-label="Cari pada halaman ini" placeholder="Cari pada halaman ini">
+                    </label>
+                </div>
+                <div class="data-table-scroll">
+                <table id="khs-table" class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nomor KHS</th>
@@ -27,7 +35,7 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach ($khsList as $khs)
+                        @forelse ($khsList as $khs)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-indigo-600">
                                     <a href="{{ route('khs.show', $khs) }}">{{ $khs->nomor_khs }}</a>
@@ -51,10 +59,17 @@
                                     @endcan
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr data-empty-state><td colspan="6" class="data-table-empty">Belum ada data KHS.</td></tr>
+                        @endforelse
+                        <tr data-search-empty hidden><td colspan="6" class="data-table-empty">Tidak ada data yang cocok pada halaman ini.</td></tr>
                     </tbody>
                 </table>
-                <div class="mt-4">{{ $khsList->links() }}</div>
+                </div>
+                <div class="data-table-pagination">
+                    <span>Menampilkan {{ $khsList->firstItem() ?? 0 }} sampai {{ $khsList->lastItem() ?? 0 }} dari {{ $khsList->total() }} hasil</span>
+                    {{ $khsList->links() }}
+                </div>
             </div>
         </div>
     </div>

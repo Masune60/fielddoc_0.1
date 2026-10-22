@@ -18,18 +18,42 @@
         @if (request()->routeIs('dashboard'))
             {{ $slot }}
         @else
-            <div class="min-h-screen bg-gray-100">
+            <div class="app-shell" x-data="{ sidebarOpen: false }">
+                <button
+                    x-show="sidebarOpen"
+                    x-transition.opacity
+                    x-cloak
+                    @click="sidebarOpen = false"
+                    class="app-sidebar-backdrop"
+                    aria-label="Tutup menu navigasi"
+                ></button>
                 @include('layouts.navigation')
-                @isset($header)
-                    <header class="bg-white shadow">
-                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                            {{ $header }}
+                <div class="app-main">
+                    <header class="app-topbar">
+                        <div class="app-topbar-heading">
+                            <button type="button" class="app-menu-button" @click="sidebarOpen = true" aria-label="Buka menu navigasi">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                            </button>
+                            @isset($header)
+                                <div class="app-page-heading">{{ $header }}</div>
+                            @endisset
+                        </div>
+                        <div class="app-topbar-profile">
+                            <span class="app-avatar">{{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr(Auth::user()->nama_lengkap, 0, 1)) }}</span>
+                            <span class="app-topbar-user-copy">
+                                <strong>{{ Auth::user()->nama_lengkap }}</strong>
+                                <small>{{ Auth::user()->getRoleNames()->first() ?? 'Pengguna' }}</small>
+                            </span>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="app-logout" aria-label="Keluar" title="Keluar">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10 17l5-5-5-5m5 5H3m9-9h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                            </form>
                         </div>
                     </header>
-                @endisset
-                <main>
-                {{ $slot }}
-                </main>
+                    <main class="app-content">{{ $slot }}</main>
+                </div>
             </div>
         @endif
     </body>

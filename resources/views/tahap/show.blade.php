@@ -19,16 +19,45 @@
     </div>
 </x-slot>
 
-    <div class="py-12">
+    <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="bg-white p-6 rounded-lg shadow-sm">
-                <p class="text-sm text-gray-500">Payung Hukum: <strong class="text-gray-800">{{ $tahap->kr->khs->nomor_khs ?? '-' }}</strong></p>
-                <p class="text-sm text-gray-500">Kontrak Rinci: <strong class="text-gray-800">{{ $tahap->kr->nomor_kr ?? '-' }}</strong></p>
-                <p class="text-sm text-gray-500">Status Penagihan: <span class="font-bold text-indigo-600">{{ $tahap->status_penagihan }}</span></p>
+            @php
+                $statusSteps = ['DRAFT' => 'Draft', 'DIAJUKAN' => 'Diajukan', 'DICAIRKAN' => 'Dicairkan'];
+                $currentStatusIndex = array_search($tahap->status_penagihan, array_keys($statusSteps), true);
+            @endphp
+            <div class="tahap-detail-grid">
+                <section class="detail-card">
+                    <div class="detail-card-heading">
+                        <div><span class="detail-eyebrow">RINGKASAN PENAGIHAN</span><h3>{{ $tahap->nomor_tahap }}</h3></div>
+                        <span class="status-pill {{ $tahap->status_penagihan === 'DICAIRKAN' ? 'status-pill-success' : ($tahap->status_penagihan === 'DIAJUKAN' ? 'status-pill-info' : 'status-pill-pending') }}">{{ $statusSteps[$tahap->status_penagihan] }}</span>
+                    </div>
+                    <dl class="detail-information">
+                        <div><dt>Payung hukum</dt><dd>{{ $tahap->kr->khs->nomor_khs ?? '-' }}</dd></div>
+                        <div><dt>Kontrak rinci</dt><dd>{{ $tahap->kr->nomor_kr ?? '-' }}</dd></div>
+                        <div><dt>Tanggal pengajuan</dt><dd>{{ $tahap->tanggal_pengajuan ?? 'Belum diajukan' }}</dd></div>
+                    </dl>
+                </section>
+
+                <aside class="detail-card status-tracking-card">
+                    <span class="detail-eyebrow">PELACAK STATUS</span>
+                    <h3>Progres penagihan</h3>
+                    <ol class="status-timeline">
+                        @foreach ($statusSteps as $status => $label)
+                            <li class="{{ $loop->index < $currentStatusIndex ? 'is-complete' : ($loop->index === $currentStatusIndex ? 'is-current' : 'is-upcoming') }}">
+                                <span class="status-timeline-marker"></span>
+                                <div><strong>{{ $label }}</strong><small>{{ $loop->index === $currentStatusIndex ? 'Status saat ini' : ($loop->index < $currentStatusIndex ? 'Selesai' : 'Menunggu tahap sebelumnya') }}</small></div>
+                            </li>
+                        @endforeach
+                    </ol>
+                </aside>
             </div>
 
-            <div class="bg-white p-6 rounded-lg shadow-sm">
-                <h4 class="font-bold text-md mb-4 text-gray-700">Daftar PK (Pekerjaan Fisik Lapangan)</h4>
+            <div class="bg-white p-6 rounded-lg shadow-sm detail-card">
+                <div class="detail-card-heading">
+                    <div><span class="detail-eyebrow">PEKERJAAN FISIK LAPANGAN</span><h3>Daftar PK / SPK</h3></div>
+                    <span class="detail-count">{{ $tahap->pks->count() }} pekerjaan</span>
+                </div>
+                <div class="data-table-scroll">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -46,8 +75,8 @@
                                 <td class="px-6 py-4 text-sm text-gray-500">{{ $pk->lokasi_pekerjaan }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-900 font-semibold">Rp {{ number_format($pk->nilai_pekerjaan, 0, ',', '.') }}</td>
                                 <td class="px-6 py-4 text-sm">
-                                    <span class="px-2 py-1 text-xs rounded-full {{ $pk->status_konstruksi === 'SELESAI_100' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                        {{ $pk->status_konstruksi }}
+                                    <span class="status-pill {{ $pk->status_konstruksi === 'SELESAI_100' ? 'status-pill-success' : 'status-pill-info' }}">
+                                        {{ $pk->status_konstruksi === 'SELESAI_100' ? 'Selesai 100%' : 'Dalam proses' }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-right text-sm font-medium">
@@ -64,6 +93,7 @@
                         @endforelse
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     </div>

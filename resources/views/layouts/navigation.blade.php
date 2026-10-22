@@ -1,155 +1,58 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
-                    </a>
-                </div>
+<aside class="app-sidebar" :class="{ 'app-sidebar-open': sidebarOpen }">
+    <a href="{{ route('dashboard') }}" class="app-brand">
+        <span class="app-brand-mark" aria-hidden="true">
+            <x-application-logo class="h-6 w-6 fill-current" />
+        </span>
+        <span>
+            <strong>FieldDoc</strong>
+            <small>Field operations</small>
+        </span>
+        <button type="button" class="app-sidebar-close" @click.prevent="sidebarOpen = false" aria-label="Tutup menu navigasi">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+    </a>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    
-    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-        {{ __('Dashboard') }}
-    </x-nav-link>
+    <nav class="app-nav" aria-label="Navigasi utama">
+        <span class="app-nav-label">MENU UTAMA</span>
+        <a href="{{ route('dashboard') }}" class="app-nav-link {{ request()->routeIs('dashboard') ? 'is-active' : '' }}" @if (request()->routeIs('dashboard')) aria-current="page" @endif>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4h6v7H4V4Zm10 0h6v4h-6V4ZM14 12h6v8h-6v-8ZM4 15h6v5H4v-5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+            <span>Dasbor</span>
+        </a>
+        @can('view pk')
+            <a href="{{ route('pk.index') }}" class="app-nav-link {{ request()->routeIs('pk.*') ? 'is-active' : '' }}" @if (request()->routeIs('pk.*')) aria-current="page" @endif>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5v-9Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m4.5 7.75 7.5 4.5 7.5-4.5M12 12.5V21" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+                <span>Daftar PK / SPK</span>
+            </a>
+        @endcan
+        @can('view tahap')
+            <a href="{{ route('tahap.index') }}" class="app-nav-link {{ request()->routeIs('tahap.*') ? 'is-active' : '' }}" @if (request()->routeIs('tahap.*')) aria-current="page" @endif>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 3.75h7l5 5v11.5H7a2 2 0 0 1-2-2v-12.5a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 4v5h5M9 13h6m-6 4h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Tahap penagihan</span>
+            </a>
+        @endcan
 
-    @can('manage users')
-    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
-        {{ __('Management User') }}
-    </x-nav-link>
-    @endcan
+        @can('view khs')
+            <span class="app-nav-label app-nav-label-spaced">MASTER DATA</span>
+            <a href="{{ route('khs.index') }}" class="app-nav-link {{ request()->routeIs('khs.*') ? 'is-active' : '' }}" @if (request()->routeIs('khs.*')) aria-current="page" @endif>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                <span>Master KHS</span>
+            </a>
+        @endcan
 
-    @can('view khs')
-    <x-nav-link :href="route('khs.index')" :active="request()->routeIs('khs.*')">
-    {{ __('Master KHS') }}
-    </x-nav-link>
-    @endcan
+        @can('manage users')
+            <span class="app-nav-label app-nav-label-spaced">PENGATURAN</span>
+            <a href="{{ route('users.index') }}" class="app-nav-link {{ request()->routeIs('users.*') ? 'is-active' : '' }}" @if (request()->routeIs('users.*')) aria-current="page" @endif>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 20v-1.5a4.5 4.5 0 0 0-4.5-4.5h-4A4.5 4.5 0 0 0 3 18.5V20m15-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM9.5 10a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm9 4a4.5 4.5 0 0 1 2.5 4v2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                <span>Management User</span>
+            </a>
+        @endcan
+    </nav>
 
-    @can('view tahap')
-    <x-nav-link :href="route('tahap.index')" :active="request()->routeIs('tahap.*')">
-    {{ __('Tahap Penagihan') }}
-    </x-nav-link>
-    @endcan
-
-    @can('view pk')
-    <x-nav-link :href="route('pk.index')" :active="request()->routeIs('pk.*')">
-    {{ __('Daftar PK/SPK') }}
-    </x-nav-link>
-    @endcan
-
-</div>
-            </div>
-
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->nama_lengkap }}</div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-
-                        @can('manage profile')
-                            <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Profile') }}
-                            </x-dropdown-link>
-                        @endcan
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
-
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
+    <div class="app-sidebar-user">
+        <span class="app-avatar">{{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr(Auth::user()->nama_lengkap, 0, 1)) }}</span>
+        <span class="app-sidebar-user-copy">
+            <strong>{{ Auth::user()->nama_lengkap }}</strong>
+            <small>{{ Auth::user()->getRoleNames()->first() ?? 'Pengguna' }}</small>
+        </span>
     </div>
-
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-
-            @can('manage users')
-                <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
-                    {{ __('Management User') }}
-                </x-responsive-nav-link>
-            @endcan
-
-            @can('view khs')
-                <x-responsive-nav-link :href="route('khs.index')" :active="request()->routeIs('khs.*')">
-                    {{ __('Master KHS') }}
-                </x-responsive-nav-link>
-            @endcan
-
-            @can('view tahap')
-                <x-responsive-nav-link :href="route('tahap.index')" :active="request()->routeIs('tahap.*')">
-                    {{ __('Tahap Penagihan') }}
-                </x-responsive-nav-link>
-            @endcan
-
-            @can('view pk')
-                <x-responsive-nav-link :href="route('pk.index')" :active="request()->routeIs('pk.*')">
-                    {{ __('Daftar PK/SPK') }}
-                </x-responsive-nav-link>
-            @endcan
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->nama_lengkap }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                @can('manage profile')
-                    <x-responsive-nav-link :href="route('profile.edit')">
-                        {{ __('Profile') }}
-                    </x-responsive-nav-link>
-                @endcan
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-            </div>
-        </div>
-    </div>
-</nav>
+</aside>

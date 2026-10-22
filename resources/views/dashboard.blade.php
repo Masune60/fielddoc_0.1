@@ -45,12 +45,14 @@
                     </a>
                 @endif
                 @if ($canViewKhs)
+                    <div class="dashboard-nav-label dashboard-nav-label-spaced">MASTER DATA</div>
                     <a href="{{ route('khs.index') }}" class="dashboard-nav-link">
                         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
                         <span>Master KHS</span>
                     </a>
                 @endif
                 @if ($canManageUsers)
+                    <div class="dashboard-nav-label dashboard-nav-label-spaced">PENGATURAN</div>
                     <a href="{{ route('users.index') }}" class="dashboard-nav-link">
                         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 20v-1.5a4.5 4.5 0 0 0-4.5-4.5h-4A4.5 4.5 0 0 0 3 18.5V20m15-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM9.5 10a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm9 4a4.5 4.5 0 0 1 2.5 4v2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
                         <span>Manajemen pengguna</span>
@@ -98,7 +100,7 @@
                     <span class="dashboard-topbar-date">{{ now()->locale('id')->translatedFormat('l, d F Y') }}</span>
                     <div class="dashboard-topbar-profile">
                         <span class="dashboard-avatar dashboard-avatar-small">{{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($user->nama_lengkap, 0, 1)) }}</span>
-                        <span>{{ $user->nama_lengkap }}</span>
+                        <span class="dashboard-topbar-user-copy"><strong>{{ $user->nama_lengkap }}</strong><small>{{ $user->getRoleNames()->first() ?? 'Pengguna' }}</small></span>
                     </div>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

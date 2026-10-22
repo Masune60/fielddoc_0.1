@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" fill="none">
+  <defs>
+    <linearGradient id="sky" x1="800" y1="0" x2="800" y2="1000" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d8e6f5"/>
+      <stop offset=".62" stop-color="#eaf0f6"/>
+      <stop offset="1" stop-color="#cbd9e7"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="800" y1="640" x2="800" y2="1000" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#aebfcb"/>
+      <stop offset="1" stop-color="#72899b"/>
+    </linearGradient>
+    <linearGradient id="sun" x1="1120" y1="290" x2="1400" y2="610" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f8f2df" stop-opacity=".9"/>
+      <stop offset="1" stop-color="#f8f2df" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h1600v1000H0z"/>
+  <circle cx="1250" cy="390" r="250" fill="url(#sun)"/>
+  <path fill="#fff" fill-opacity=".24" d="M0 564c212-76 349 35 524-20 183-58 295-35 441 18 202 74 385-48 635-20v458H0V564Z"/>
+  <path fill="url(#ground)" d="M0 700c183-50 360-74 537-23 206 59 316 46 495-3 175-48 375-66 568 12v314H0V700Z"/>
+  <path stroke="#70859a" stroke-opacity=".28" stroke-width="3" d="M0 788c237-62 406-42 611 17 180 52 338 42 536-14 170-48 302-48 453-8M0 866c206-45 363-18 553 28 208 50 371 20 567-28 169-41 328-39 480-3"/>
+  <g stroke="#536a80" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke-width="9" d="m1280 194-92 510m92-510 100 510m-149-372h100m-119 105h156m-175 100h194m-211 98h229"/>
+    <path stroke-width="6" d="m1230 298-96 35m196-35 102 37m-317 68-143 51m375-51 160 54m-438 43-148 54m481-54 153 54m-493 43-152 56m548-56 139 57"/>
+    <path stroke-width="4" d="M1188 235h184m-203 103h220m-241 104h263m-282 105h299"/>
+    <path stroke-width="4" d="m1280 194-55 42m55-42 58 42m-124 61 68 41m68-41-68 41m-94 62 94 41m94-41-94 41m-110 63 110 42m110-42-110 42m-128 64 128 44m128-44-128 44"/>
+  </g>
+  <g stroke="#536a80" stroke-opacity=".72" stroke-width="2">
+    <path d="M0 318c217-17 359 30 566 8 207-22 358-1 518 13 189 17 318-7 516-34M0 370c217-18 359 29 566 7 207-22 358-1 518 13 189 17 318-7 516-34"/>
+    <path d="M0 436c217-17 359 30 566 8 207-22 358-1 518 13 189 17 318-7 516-34M0 488c217-18 359 29 566 7 207-22 358-1 518 13 189 17 318-7 516-34"/>
+  </g>
+  <path fill="#526b80" fill-opacity=".18" d="m1188 704 92-510 100 510h-192Z"/>
+</svg>
